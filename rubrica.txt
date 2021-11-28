@@ -21,7 +21,7 @@
     Core dump -5 puntos
     Uso de variables globales -5 puntos
     No controlan argumentos pudiendo dar error el programa -2 puntos
-    Hacer declaración de un array de este modo pacientes[atoi(argv(2)]] es declaración estática que no puede hacerse (aunque funciona), si se quiere hacer algo así debería ser con memoria dinámica -3 puntos
+    Hacer declaración de un array de este modo pacientes[atoi(argv(2)]] es declaración estática que no puede hacerse (aunque funciona), si se quiere hacer algo así debería ser con memoria dinámica (puntero) -3 puntos
     Señales innecesarias -2 puntos
     Sleeps excesivos -2 puntos
     Decidir donde va el padre o el hijo con getpid y su almacenamiento en variables es innecesario -1 punto
