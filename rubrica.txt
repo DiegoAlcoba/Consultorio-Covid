@@ -1,0 +1,30 @@
+## CONSEJOS Y RECORDATORIOS
+
+- Para los números aletatorio usar "srand(getpid)" para evitar problemas con la hora
+- Parsear argumento a int: long parameter = strtol(argv[1], ........) ?? 
+
+## RUBRICA PARA LA REALIZACIÓN DE LA PRÁCTICA
+
+### SCRIPT
+
+	Para facilitar la realización de la práctica el script deberá comprobar que el número de pacientes sea mayor o igual a 2, en caso contrario devuelve un error y no deja ejecutar el programa. //IMPORTANTE
+    Código mal estructurado o repetitivo -2 puntos
+    Sin funciones -1 punto
+    Si el script no se repite (en los casos que no sean ejecutar el programa) -2 puntos
+    Si falta alguna funcionalidad -2 puntos
+    Otros fallos menores -1 punto
+    Fallos mayores -2 puntos
+
+### PRÁCTICA
+
+    Si no funciona nada incluso al probarla en el aula -7 puntos.
+    Core dump -5 puntos
+    Uso de variables globales -5 puntos
+    No controlan argumentos pudiendo dar error el programa -2 puntos
+    Hacer declaración de un array de este modo pacientes[atoi(argv(2)]] es declaración estática que no puede hacerse (aunque funciona), si se quiere hacer algo así debería ser con memoria dinámica -3 puntos
+    Señales innecesarias -2 puntos
+    Sleeps excesivos -2 puntos
+    Decidir donde va el padre o el hijo con getpid y su almacenamiento en variables es innecesario -1 punto
+    Considerar que los pids de los procesos son consecutivos y sumar o restar -4 puntos
+    Otros fallos menores -1 punto
+    Otros fallos mayores -2 puntos

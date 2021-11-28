@@ -1,0 +1,61 @@
+#!/bin/bash
+
+function sourceCode() {
+	 cat consultorio.c   
+}
+
+function compilation() {
+	gcc consultorio.c -o consultorio
+}
+
+function execution() {
+	while test -f consultorio
+	do
+		chmod +x consultorio
+		echo Introduce el número de pacientes: 
+		read pacientes
+		echo -e "\n"
+		if test $pacientes -gt 2
+			then
+				./consultorio $pacientes
+			else
+				#Comprobar si el error se comunica con error o con una señal? y si el script debe volver a ejecutarse automáticamente o se sale 
+				echo -e "ERROR. El número de pacientes debe ser igual o mayor a 2."
+				exit 0
+		fi
+	break
+	done
+}
+
+while true
+do
+	echo -e "\n\nPor favor, escoja la opción que desee ejecutar:"
+	echo 1. Mostrar código fuente del programa
+	echo 2. Comenzar compilación del programa
+	echo 3. Comenzar la ejecución del programa
+	echo -e "4. Salir\n"
+	
+	read input
+
+	case $input in
+		1)  echo -e "\nMostrando el código del programa..\n"
+		    echo --------------------------------------------------------------------------------------------------
+			sourceCode
+		    echo --------------------------------------------------------------------------------------------------
+			;;
+
+		2)  echo -e "\nCompilando el programa..\n"
+			compilation
+			echo -e "Compilación exitosa\n"
+			;;
+
+		3)	echo -e "\nComenzando ejecución del programa..\n"
+			execution
+			echo -e "\n\nEjecución realizada con éxito\n"
+			;;
+
+		4) exit 0;;
+		*) echo -e "\nPor favor, escoja una de las cuatro opciones disponibles\n\n";;
+	esac
+done
+
