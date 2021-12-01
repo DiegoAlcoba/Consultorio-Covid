@@ -14,7 +14,7 @@ void preparaVacunas(pid_t c, pid_t r,int v) {
 }
 
 int main(int argc, char *argv[]) {
-	
+	//El aleatorio es si hay vacunas suficientes o no (0 o 1), no el número de vacunas etc pollas en vinagre
 	srand(getpid());
 
 	int parameter, vacunas, estado;
