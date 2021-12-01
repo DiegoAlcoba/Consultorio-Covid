@@ -7,11 +7,13 @@
 
 ### SCRIPT
 
-	Para facilitar la realización de la práctica el script deberá comprobar que el número de pacientes sea mayor o igual a 2, en caso contrario devuelve un error y no deja ejecutar el programa. //IMPORTANTE
-    Código mal estructurado o repetitivo -2 puntos
-    Sin funciones -1 punto
+	Para facilitar la realización de la práctica el script deberá comprobar que el número de pacientes sea mayor o igual a 2, en caso contrario devuelve un error y no deja ejecutar el programa. HECHO 
+    Código mal estructurado o repetitivo -2 puntos HECHO
+    Sin funciones -1 punto HECHO
     Si el script no se repite (en los casos que no sean ejecutar el programa) -2 puntos
-    Si falta alguna funcionalidad -2 puntos
+	//Preguntar si tras la ejecución se debe volver a mostrar el menú o se finaliza por completo
+
+    Si falta alguna funcionalidad -2 puntos DEBERÍA ESTAR BIEN
     Otros fallos menores -1 punto
     Fallos mayores -2 puntos
 
