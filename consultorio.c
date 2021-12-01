@@ -7,17 +7,15 @@
 #include <sys/wait.h> 
 #include <sys/syscall.h>
 
-void preparaVacunas(pid_t c, pid_t r,int v) {
-	
-	printf("El número de vacunas disponibles son %d\n", v);	
+int calculaAleatorios(int min, int max) {
+	srand(getpid());
 
+	return rand() % (max - min + 1) + min;
 }
 
 int main(int argc, char *argv[]) {
-	//El aleatorio es si hay vacunas suficientes o no (0 o 1), no el número de vacunas etc pollas en vinagre
-	srand(getpid());
 
-	int parameter, vacunas, estado;
+	int parameter, estado;
 	int *pacientes; //Recordar liberar la memoria al final "free(pacientes)"
 	pid_t pidCoord, pidResp, pidAux1, pidAux2;
 
@@ -25,11 +23,7 @@ int main(int argc, char *argv[]) {
 	parameter = atoi(argv[1]);
 	pacientes = (int *) malloc (parameter * sizeof (int));
 
-	vacunas = rand(); //Número vacunas disponibles aleatoria
-
 	//Creación del responsable de inventario y los dos auxiliares
-	//int *hijos;
-	//hijos = (int *) malloc (3 * sizeof (int));
 	pidCoord = wait(&estado);
 
 	for (int i = 0; i <= 2; i++) {
@@ -61,8 +55,13 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	//Llamo a la función para que el coordinador prepare las vacunas
-	preparaVacunas(pidCoord, pidResp, vacunas);
+	//Señal al inventario
+	//kill(pidResp, SIGUSR1);
+
+	//Llamada a la función que comprueba si hay suficientes vacunas
+//	calculaAleatorios(0, 1);
+	/*If 0 == no hay vacunas suficientes
+	if 1 == sí hay vacuanas suficientes*/
 
 return 0;
 }
