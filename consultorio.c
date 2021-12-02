@@ -7,61 +7,107 @@
 #include <sys/wait.h> 
 #include <sys/syscall.h>
 
+/*Función que calcula aleatoriamente si hay vacunas suficientes o no*/
 int calculaAleatorios(int min, int max) {
 	srand(getpid());
 
-	return rand() % (max - min + 1) + min;
+	return (rand() % (max - min + 1) + min);
+}
+
+/*Preparación de las vacunas*/
+void handle_preparaVacunas(int sig) {
+
+	/*Se vuelve a asignar el handler a la señal SIGUSR1*/
+	if (signal(SIGUSR1, handle_preparaVacunas) == SIG_ERR) {
+		perror("Llamada a signal");
+		exit(-1);
+	}
+
+	return calculaAleatorios(0, 1);
+}
+
+/*Auxiliares reciben la orden de proceder con la vacunación*/
+void handle_vacunacion(int sig) {
+
+	printf("** Procediendo a la vacunación **");
 }
 
 int main(int argc, char *argv[]) {
 
-	int parameter, estado;
+	int parameter, estado, vacunas;
 	int *pacientes; //Recordar liberar la memoria al final "free(pacientes)"
-	pid_t pidCoord, pidResp, pidAux1, pidAux2;
 
-	// Paso el argumento del programa (pacientes) como entero y creo un array dinámico del tamaño del número de pacientes 
+	/* Paso el argumento del programa (pacientes) como entero y creo un array dinámico del tamaño del número de pacientes*/ 
 	parameter = atoi(argv[1]);
 	pacientes = (int *) malloc (parameter * sizeof (int));
 
-	//Creación del responsable de inventario y los dos auxiliares
-	pidCoord = wait(&estado);
+	/*Array que contendrá a los hijos*/
+	int *hijos;
+	hijos = (int *)malloc(3 * sizeof (int));
 
-	for (int i = 0; i <= 2; i++) {
-		pidCoord = fork();
+	/*Creación del responsable de inventario y los dos auxiliares*/
+	pid_t p;
+
+	for (int i = 0; i < 3; i++) {
 		
-		if (pidCoord == -1) {
-			perror("Error en la llamada a fork()");
-		} else if (pidCoord == 0) {
+		p = fork();
+		hijos[i] = p;
+		
+		if (p == -1) {
+			perror("Error en la llamada a fork()\n");
+		} 
+		else if (p == 0) {
 			switch (i) {
-				case 0:
-				//printf("Soy el responsable de inventario %d\n", getpid());
-					pidResp = getpid();
-					sleep(3);
+				case 0: /*Responsable del inventario*/
+					
+					signal(SIGUSR1, &handle_preparaVacunas); /*Recibe la señal*/
+					
+					/*Se le asignal el handler a la señal SIGUSR1*/
+					if (signal(SIGUSR1, handle_preparaVacunas) == SIG_ERR) { 
+						perror("Llamada a signal");
+					
+						exit(-1);
+					}
+
+					printf("** Responsable de inventario preparando las vacunas **\n");
+					sleep(calculaAleatorios(3, 6));
+					
+					exit(handle_preparaVacunas(vacunas));
 					break;
-				case 1:
-					//printf("Soy el aux1 %d\n", getpid());
-					pidAux1 = getpid();
-					sleep(3);
-					break;
-				case 2:
-					//printf("Soy el aux2 %d\n", getpid());
-					pidAux2 = getpid();
-					sleep(3);
+				case 1: /*Auxiliar 1*/
+				case 2: /*Auxiliar 2*/
+
+					signal(SIGUSR2, &handle_vacunacion);	
+					
 					break;
 			}
-		} else {
+		} 
+		else { /*Coordinador*/
+
+			kill(hijos[0], SIGUSR1);
 			wait(&estado);
-			//printf("Soy el coordinador %d\n", getpid());
+
+			if (WEXITSTATUS == 0) { /*No hay vacunas suficientes*/
+				for (int i = 0; i < 3; i++) {
+					kill(hijos[i], SIGTERM);
+				}
+
+				exit(-1);
+			}
+			else if (WEXITSTATUS == 1) { /*Hay vacunas suficientes*/
+				
+				for (int i = 1; i < 3; i++) {
+					kill(hijos[i], SIGUSR2);
+				}
+				
+
+			}
+			else {
+				perror("** Error en el número de vacunas **\n");
+			}
+
 		}
 	}
-
-	//Señal al inventario
-	//kill(pidResp, SIGUSR1);
-
-	//Llamada a la función que comprueba si hay suficientes vacunas
-//	calculaAleatorios(0, 1);
-	/*If 0 == no hay vacunas suficientes
-	if 1 == sí hay vacuanas suficientes*/
 
 return 0;
 }
