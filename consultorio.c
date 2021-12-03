@@ -38,8 +38,6 @@ void handle_vacunacion(int sig) {
 		perror("Llamada a signal");			
 		exit(-1);
 	}
-
-
 }
 
 /*Auxiliares están vacunando en el momento*/
@@ -59,9 +57,33 @@ void handle_vacunando(int sig) {
 	exit(calculaAleatorios(0, 1));
 }
 
+void creaPacientes(pid_t t,int *pac, int k) {
+
+	t = fork();
+
+	if (t == -1) {
+		perror("Error en la llamada a fork()\n");
+	}
+	else if (t == 0){ /*Pacientes*/
+
+		/*Se les asigna el handler a la señal SIGUSR1*/
+		if (signal(SIGUSR1, handle_vacunando) == SIG_ERR) { 
+			perror("Llamada a signal");
+
+			exit(-1);
+		}
+
+		pause(); /*Esperan a que el auxiliar les envíe la señal*/
+	}
+	else { /*Auxiliar*/
+
+		pac[k] = t;	
+	}
+}
+
 int main(int argc, char *argv[]) {
 
-	int parameter, estado, vacunas, i;
+	int parameter, estado, vacunas, i, j;
 	int *pacientes; //Recordar liberar la memoria al final "free(pacientes)"
 
 	/* Paso el argumento del programa (pacientes) como entero y creo un array dinámico del tamaño del número de pacientes*/ 
@@ -102,84 +124,54 @@ int main(int argc, char *argv[]) {
 
 					break;
 				case 1: /*Auxiliar 1*/
-				case 2: /*Auxiliar 2*/
 
-					/*Se les asigna el handler a la señal SIGUSR2*/
+					/*Se le asigna el handler a la señal SIGUSR2*/
 					if (signal(SIGUSR2, handle_vacunacion) == SIG_ERR) { 
 						perror("Llamada a signal");
 					
 						exit(-1);
 					}
 					
-					/*Cada auxiliar crea n/2 procesos si pacientes pares*/
-					if (parameter % 2 == 0) {
-							
-						for (i = 0; i < (parameter / 2); i++) {
-							
-							pp = fork();
+					printf("polla");
 
-							if (pp == -1) {
-								perror("Error en la llamada a fork()\n");
-							}
-							else if (pp == 0){ /*Pacientes*/
-
-								/*Se les asigna el handler a la señal SIGUSR1*/
-								if (signal(SIGUSR1, handle_vacunando) == SIG_ERR) { 
-									perror("Llamada a signal");
+					/*Auxiliar crea n/2 procesos*/
+					for (j = 0; j < (parameter / 2); j++) {
 					
-									exit(-1);
-								}
-
-								pause(); /*Esperan a que el auxiliar les envíe la señal*/
-							}
-							else { /*Auxiliar*/
-
-								pacientes[i] = pp;	
-							}
-						}
+						creaPacientes(pp, pacientes, j);
 					}
 
-					/*Un auxiliar crea n/2 procesos, y el otro (n/2) + 1 si pacientes son impares*/
+					pause();
+
+
+					break;
+				case 2: /*Auxiliar 2*/
+
+					/*Se le asigna el handler a la señal SIGUSR2*/
+					if (signal(SIGUSR2, handle_vacunacion) == SIG_ERR) { 
+						perror("Llamada a signal");
+					
+						exit(-1);
+					}
+					
+					printf("kejfna");
+					/*Auxiliar crea n/2 procesos*/
+					for (j = (parameter / 2); j < parameter; j++) {
+					
+						creaPacientes(pp, pacientes, j);
+					}
+
+					/*Un auxiliar crea crea un proceso más si pacientes impares*/
 					if (parameter % 2 != 0) {
 							
-						for (i = 0; i < ((hijos[parameter] / 2) + 1); i++) {
-							
-							pp = fork();
-
-							if (pp == -1) {
-								perror("Error en la llamada a fork()\n");
-							}
-							else if (pp == 0){ /*Pacientes*/
-
-								/*Se les asigna el handler a la señal SIGUSR1*/
-								if (signal(SIGUSR1, handle_vacunando) == SIG_ERR) { 
-									perror("Llamada a signal");
-					
-									exit(-1);
-								}
-
-								pause(); /*Esperan a que el auxiliar les envíe la señal*/
-							}
-							else { /*Auxiliar*/
-
-								pacientes[i] = pp;	
-							}
-						}
+						creaPacientes(pp, pacientes, parameter);
 					}
 
-					/*
-					*
-					*
-					* CÓDIGO, BÁSICAMENTE EL DE ARRIBA PERO A UN AUX N/2 + 1
-					*
-					*/
 					pause();/*Los auxiliares esperan a recibir la señal del coordinador*/
 
 					/*Vacunación*/
-					//printf("** Auxiliar preparando la vacuna **\n");  
-					//sleep(calculaAleatorios(2, 5));
 						
 					int reacciones = 0;	
+
 					/*Envía la señal a cada uno de los pacientes asignados*/
 					for (i = 0; i < (parameter / 2); i++) {
 

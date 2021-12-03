@@ -18,7 +18,7 @@ function execution() {
 		echo Introduce el número de pacientes: 
 		read pacientes
 		echo -e "\n"
-		if test $pacientes -gt 2
+		if test $pacientes -ge 2
 			then
 				./consultorio $pacientes
 				exit 0
