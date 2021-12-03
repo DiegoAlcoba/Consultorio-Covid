@@ -180,11 +180,6 @@ int main(int argc, char *argv[]) {
 						creaPacientes(pacientes, i);
 					}
 
-					/*Un auxiliar crea crea un proceso más si pacientes impares*/
-					//if (parameter % 2 != 0) {
-					//	creaPacientes(pacientes, parameter);
-					//}
-
 					/*Vacunación*/
 						
 					int reacciones = 0;	
@@ -205,22 +200,6 @@ int main(int argc, char *argv[]) {
 						}
 
 					}
-
-				    //if (parameter % 2 != 0) {
-
-					//	printf("\n** Auxiliar preparando la vacuna **\n...\n");  
-						
-					//	sleep(calculaAleatorios(2, 5));
-						
-					//	kill(pacientes[parameter], SIGUSR1);			
-					
-					//	wait(&estado);
-
-					//	if (WEXITSTATUS(estado) == 1) {
-							reacciones++;
-					//	}
-
-					//}
 
 					printf("\n%d pacientes vacunados por auxiliar 2 han tenido reacción\n", reacciones);
 
