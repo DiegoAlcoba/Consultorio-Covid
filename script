@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# Función que muestra el código del programa por pantalla
 function sourceCode() {
 	 cat consultorio.c   
 }
 
+# Compila el programa
 function compilation() {
 	gcc consultorio.c -o consultorio
 }
 
+# Comprueba permisos de ejecución, lee y comprueba el parámetro de ejecución, y ejecuta el programa
 function execution() {
 	while test -f consultorio
 	do
@@ -20,7 +23,6 @@ function execution() {
 				./consultorio $pacientes
 				exit 0
 			else
-				#Comprobar si el error se comunica con error o con una señal? y si el script debe volver a ejecutarse automáticamente o se sale 
 				echo -e "ERROR. El número de pacientes debe ser igual o mayor a 2."
 				exit 0
 		fi
@@ -28,6 +30,7 @@ function execution() {
 	done
 }
 
+# Muestra por pantalla el menú de selección, lee la elección y ejecuta en base a ella
 while true
 do
 	echo -e "\n\nPor favor, escoja la opción que desee ejecutar:"
@@ -50,9 +53,9 @@ do
 			echo -e "Compilación exitosa\n"
 			;;
 
-		3)	echo -e "\nComenzando ejecución del programa..\n"
+		3)	echo -e "\nEjecutando el programa.....\n"
+		    echo -e "\n"
 			execution
-			echo -e "\n\nEjecución realizada con éxito\n"
 			;;
 
 		4) exit 0;;

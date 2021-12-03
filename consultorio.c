@@ -52,9 +52,9 @@ void handle_vacunando(int sig) {
 		exit(-1);
 	}
 
-	printf("** Paciente siendo vacunado **\n");
+	printf("** Paciente siendo vacunado **\n...\n");
 	sleep(calculaAleatorios(3, 6));
-	printf("Paciente vacunado con éxito\n");
+	printf("** Paciente vacunado con éxito **\n");
 
 	exit(calculaAleatorios(0, 1));
 }
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 					/*Un auxiliar crea n/2 procesos, y el otro (n/2) + 1 si pacientes son impares*/
 					if (parameter % 2 != 0) {
 							
-						for (i = 0; i < (parameter / 2); i++) {
+						for (i = 0; i < ((hijos[parameter] / 2) + 1); i++) {
 							
 							pp = fork();
 
